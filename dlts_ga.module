@@ -41,7 +41,7 @@ function dlts_ga_add_google_analytics_code(&$conf) {
 	    drupal_add_js('console.log("Google Analytics debug mode: on.");', 'inline');	
 	    drupal_add_js('console.log("Google Analytics UA: ' . $conf['ua']. '.");', 'inline');		    
 	  }
-	  if (($conf['debug'] || !in_array('administrator', $user->roles)) {
+	  if ($conf['debug'] || !in_array('administrator', $user->roles)) {
 		  drupal_add_js(theme('dlts_ga_script'), 'inline');
 		}
 	}
