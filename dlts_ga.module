@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function dlts_ga_menu() {
+  return array(
+    'admin/config/system/dlts-ga' => array(
+      'title' => 'DLTS - Google Analytics',
+      'description' => 'Configure settings related to Google Analytics.',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('dlts_ga_config'),
+      'access arguments' => array('access administration pages'),
+      'file' => 'inc/admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function dlts_ga_theme($existing, $type, $theme, $path) {
+  return array(
+  	'dlts_ga_script' => array(
+  	  'template' => 'templates/code',
+  	),
+  );
+}
+
+function dlts_ga_add_google_analytics_code(&$conf) {
+	/** Load the currently logged in user. */
+	global $user;
+	$conf['ua'] = variable_get('dlts_ga_code');
+	$conf['debug'] = variable_get('dlts_ga_debug', 0);	
+	$conf['enable'] = variable_get('dlts_ga_enable', 0);
+	$conf['cookieDomain'] = variable_get('dlts_ga_cookiedomain', 'auto');
+	$conf['anonymizeIp'] = variable_get('dlts_ga_anonymizeip', 'true');	  	  	
+	if ($conf['enable']) {
+	  /** just add when user is not admin */
+	  if ($conf['debug']) { 
+	    drupal_add_js('console.log("Google Analytics debug mode: on.");', 'inline');	
+	    drupal_add_js('console.log("Google Analytics UA: ' . $conf['ua']. '.");', 'inline');		    
+	  }
+	  if (($conf['debug'] || !in_array('administrator', $user->roles)) {
+		  drupal_add_js(theme('dlts_ga_script'), 'inline');
+		}
+	}
+}
+
+/**
+ * Implementation of hook_node_view()
+ * Act on a node that is being assembled before rendering.
+ * See: https://api.drupal.org/api/drupal/modules%21node%21node.api.php/function/hook_node_view/7
+ */
+function dlts_ga_node_view($node, $view_mode, $langcode) {
+  $enable = variable_get('dlts_ga_enable', 0);
+  $conf = array();
+	if ($enable) {
+	  dlts_ga_add_google_analytics_code($conf);
+	  if (field_info_instance('node', 'field_collection', $node->type)) {
+	    $wrapper = entity_metadata_wrapper('node', $node);
+	    $collections = $wrapper->field_collection->value();
+	    $options = array('dimensions' => array('collections' => array()));
+	    foreach ($collections as $collection) {
+		    $collection_wrapper = entity_metadata_wrapper('node', $collection);
+		    $collection_name = $collection_wrapper->field_name->value();
+		    $collection_code = $collection_wrapper->field_code->value();
+		    $options['dimensions']['collections'][] = array(
+				  'name' => $collection_name,
+				  'code' => $collection_code,
+		    );
+		    unset($collection_wrapper);
+		    unset($collection_name);
+		    unset($collection_code);
+		  }
+	  }
+	}
+	drupal_add_js(array('dlts_ga' => $conf), 'setting');	
+}
