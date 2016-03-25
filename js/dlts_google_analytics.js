@@ -17,7 +17,8 @@
           }
           */
           /* we only send the first item in the collections dimensions */
-          if (jQuery.isArray(settings.localhost.dimensions.collections)) {
+          if (settings.localhost.dimensions.collections &&
+              settings.localhost.dimensions.collections.length > 0) {
             window.ga("set", "dimension1", settings.localhost.dimensions.collections[0].name);
           }          
           if (debug) {
