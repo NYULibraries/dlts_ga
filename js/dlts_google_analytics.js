@@ -1,29 +1,29 @@
 ; (function ($) {
-  Drupal.behaviors.localhost = {
+  Drupal.behaviors.dlts_google_analytics = {
     attach: function (context, settings) {
-      if (settings.localhost) {
-        var enable = settings.localhost.enable;
-        var debug = settings.localhost.debug;
+      if (settings.dlts_google_analytics) {
+        var enable = settings.dlts_google_analytics.enable;
+        var debug = settings.dlts_google_analytics.debug;
         if (enable === 1 && jQuery.isFunction(window.ga)) {
-          window.ga("create", settings.localhost.ua, { "cookieDomain": settings.localhost.cookieDomain });
-          window.ga("set", "anonymizeIp", settings.localhost.anonymizeIp);
+          window.ga("create", settings.dlts_google_analytics.ua, { "cookieDomain": settings.dlts_google_analytics.cookieDomain });
+          window.ga("set", "anonymizeIp", settings.dlts_google_analytics.anonymizeIp);
           // https://jira.nyu.edu/browse/DLTSVIDEO-83 
           // https://jira.nyu.edu/browse/DLTSVIDEO-67
           /**
-          if (jQuery.isArray(settings.localhost.dimensions.collections)) {
-            $.each(settings.localhost.collections, function(key, collection) {
+          if (jQuery.isArray(settings.dlts_google_analytics.dimensions.collections)) {
+            $.each(settings.dlts_google_analytics.collections, function(key, collection) {
               window.ga("set", "dimension1", collection.name);
             });            
           }
           */
           /* we only send the first item in the collections dimensions */
-          if (settings.localhost.dimensions.collections &&
-              settings.localhost.dimensions.collections.length > 0) {
-            window.ga("set", "dimension1", settings.localhost.dimensions.collections[0].name);
+          if (settings.dlts_google_analytics.dimensions.collections &&
+              settings.dlts_google_analytics.dimensions.collections.length > 0) {
+            window.ga("set", "dimension1", settings.dlts_google_analytics.dimensions.collections[0].name);
           }          
           if (debug) {
             console.log('GoogleAnalyticsObject: ' + GoogleAnalyticsObject);
-            console.log(settings.localhost);
+            console.log(settings.dlts_google_analytics);
           }
           else {
             window.ga("send", "pageview");
