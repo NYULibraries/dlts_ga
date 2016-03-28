@@ -5,7 +5,7 @@
  */
 function dlts_google_analytics_menu() {
   return array(
-    'admin/config/system/dlts_google_analytics' => array(
+    'admin/config/system/dlts-google-analytics' => array(
       'title' => 'DLTS - Google Analytics',
       'description' => 'Configure settings related to Google Analytics.',
       'page callback' => 'drupal_get_form',
