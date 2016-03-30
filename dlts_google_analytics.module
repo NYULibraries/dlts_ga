@@ -28,23 +28,23 @@ function dlts_google_analytics_theme($existing, $type, $theme, $path) {
 }
 
 function dlts_google_analytics_add_google_analytics_code(&$conf) {
-  if (dlts_google_analytics_is_inline()) { return; } 
-	/** Load the currently logged in user. */
-	global $user;
-	$conf['ua'] = variable_get('dlts_google_analytics_code');
-	$conf['debug'] = variable_get('dlts_google_analytics_debug', 0);	
-	$conf['enable'] = variable_get('dlts_google_analytics_enable', 0);
-	$conf['cookieDomain'] = variable_get('dlts_google_analytics_cookiedomain', 'auto');
-	$conf['anonymizeIp'] = variable_get('dlts_google_analytics_anonymizeip', 'true');	  	  	
-	if ($conf['enable']) {
-	  /** just add when user is not admin */
-	  if ($conf['debug']) { 
-	    drupal_add_js('console.log("Google Analytics debug mode: on.");', 'inline');	
-	    drupal_add_js('console.log("Google Analytics UA: ' . $conf['ua']. '.");', 'inline');		    
+	$dlts_google_analytics_is_inline = &drupal_static('dlts_google_analytics_is_inline');
+	if (!$dlts_google_analytics_is_inline) {
+	  $conf['ua'] = variable_get('dlts_google_analytics_code');
+  	$conf['debug'] = variable_get('dlts_google_analytics_debug', 0);	
+  	$conf['enable'] = variable_get('dlts_google_analytics_enable', 0);
+	  $conf['cookieDomain'] = variable_get('dlts_google_analytics_cookiedomain', 'auto');
+  	$conf['anonymizeIp'] = variable_get('dlts_google_analytics_anonymizeip', 'true');	  	  	
+	  if ($conf['enable']) {
+	    /** just add when user is not admin */
+	    if ($conf['debug']) { 
+	      drupal_add_js('console.log("Google Analytics debug mode: on.");', 'inline');	
+  	    drupal_add_js('console.log("Google Analytics UA: ' . $conf['ua']. '.");', 'inline');		    
+	    }
+	    if ($conf['debug'] || user_is_anonymous()) {
+		    drupal_add_js(theme('dlts_google_analytics_script'), 'inline');
+		  }
 	  }
-	  if ($conf['debug'] || user_is_anonymous()) {
-		  drupal_add_js(theme('dlts_google_analytics_script'), 'inline');
-		}
 	}
 }
 
@@ -81,15 +81,4 @@ function dlts_google_analytics_node_view($node, $view_mode, $langcode) {
 	    drupal_add_js(array('dlts_google_analytics' => $conf), 'setting');
 	  }
 	}
-}
-
-function dlts_google_analytics_is_inline() {
-	$dlts_google_analytics_is_inline = &drupal_static('dlts_google_analytics_is_inline');
-	if (isset($dlts_google_analytics_is_inline)) {
-	  $dlts_google_analytics_is_inline = FALSE;
-  }
-  else {
-	  $dlts_google_analytics_is_inline = TRUE;
-  }  
-	return $dlts_google_analytics_is_inline;
 }
