@@ -28,7 +28,7 @@ function dlts_google_analytics_theme($existing, $type, $theme, $path) {
 }
 
 function dlts_google_analytics_add_google_analytics_code() {
-  $conf = &drupal_static(__FUNCTION__);
+  static $conf;
   if (!isset($conf)) {
     $conf = array();
     $conf['ua'] = variable_get('dlts_google_analytics_code');
