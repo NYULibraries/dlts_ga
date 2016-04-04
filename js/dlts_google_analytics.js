@@ -1,16 +1,15 @@
 ; (function ($) {
   Drupal.behaviors.dlts_google_analytics = {
     attach: function (context, settings) {
-      if (settings.dlts_google_analytics) {
-        var enable = settings.dlts_google_analytics.enable;
-        var debug = settings.dlts_google_analytics.debug;
+      var module = settings.dlts_google_analytics;
+      if (module) {
+        var enable = module.enable;
+        var debug = module.debug;
         if (enable === 1 && jQuery.isFunction(window.ga)) {
-          window.ga("create", settings.dlts_google_analytics.ua, { "cookieDomain": settings.dlts_google_analytics.cookieDomain });
-          window.ga("set", "anonymizeIp", settings.dlts_google_analytics.anonymizeIp);
-
-          if (settings.dlts_google_analytics.dimensions.collections &&
-              settings.dlts_google_analytics.dimensions.collections.length > 0) {
-
+          window.ga("create", module.ua, { "cookieDomain": module.cookieDomain });
+          window.ga("set", "anonymizeIp", module.anonymizeIp);
+          if (module.dimensions.collections &&
+              module.dimensions.collections.length > 0) {
             /* We will only record the first collection for now.  Later we might start
              tracking the full list of collections once we come up with a strategy.
              We can't use pageviews because that would cause hit inflation.
@@ -29,23 +28,21 @@
                  eventLabel: 'Asset viewed'
                });
              });
-
              For more details, refer to:
                  https://jira.nyu.edu/browse/DLTSVIDEO-83
                  https://jira.nyu.edu/browse/DLTSVIDEO-67
              */
-
-            window.ga("set", "dimension1", settings.dlts_google_analytics.dimensions.collections[0].name);
-          }          
+            window.ga("set", "dimension1", module.dimensions.collections[0].name);
+          }
           if (debug) {
             console.log('GoogleAnalyticsObject: ' + GoogleAnalyticsObject);
-            console.log(settings.dlts_google_analytics);
+            console.log(module);
           }
           else {
             window.ga("send", "pageview");
           }
         }
       }
-    }    
+    }
   }
 })(jQuery);
