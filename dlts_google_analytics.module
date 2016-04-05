@@ -42,7 +42,7 @@ function dlts_google_analytics_add_google_analytics_code() {
 	    /** just add when user is not admin or debug is on */
 	    if ($conf['debug']) {
 	      drupal_add_js('console.log("Google Analytics debug mode: on.");', 'inline');
-  	    drupal_add_js('console.log("Google Analytics UA: ' . $conf['ua']. '.");', 'inline');
+  	      drupal_add_js('console.log("Google Analytics UA: ' . $conf['ua']. '.");', 'inline');
 	    }
 	    if ($conf['debug'] || user_is_anonymous()) {
 		  drupal_add_js(theme('dlts_google_analytics_script'), 'inline');
