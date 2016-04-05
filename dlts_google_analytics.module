@@ -80,11 +80,10 @@ function dlts_google_analytics_node_view($node, $view_mode, $langcode) {
 		);
 
 		unset( $collection_wrapper );
-	  }
-    }
 
-	if (isset($conf['enable'])) {
-	  drupal_add_js(array('dlts_google_analytics' => $conf), 'setting');
+	    drupal_add_js(array('dlts_google_analytics' => $conf), 'setting');
+	  }
+
 	}
   }
 }
